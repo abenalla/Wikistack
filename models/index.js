@@ -1,12 +1,9 @@
-const Sequelize = require("sequilize");
+const Sequelize = require("sequelize");
 const db = new Sequelize("postgres://localhost:5432/wikistack", {
-  logging: false
+  logging: false,
 });
 
-const wikiRouter = require('./routes/wiki');
-const userRouter = require('./routes/user');
-
-applicationCache.use('/wiki', wikiRouter);
+//applicationCache.use("/wiki", wikiRouter);
 
 const Page = db.define("page", {
   title: {
@@ -26,14 +23,14 @@ const Page = db.define("page", {
 const User = db.define("user", {
   name: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
   },
   email: {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
-      isEmail: true
-    }
+      isEmail: true,
+    },
   },
 });
-module.exports = { db, Page, User };</
+module.exports = { db, Page, User };

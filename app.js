@@ -1,32 +1,31 @@
-var express = require("express");
-var app = express();
+const express = require("express");
+const app = express();
+const morgan = require("morgan");
+const layout = require("./views/layout");
 const { db } = require("./models");
 const models = require("./models");
+const wikiRouter = require("./routes/wiki");
+const userRouter = require("./routes/user");
 
-const init = async () => {
-  await models.User.sync();
-  await models.Page.sync();
+app.use(morgan("dev"));
 
-  // THIS DROPS ALL TABLES THEN RECREATES THEM BASED ON THE JS DEFINITION
-  models.db.sync({ force: true });
+app.use(express.static(__dirname + "/public"));
 
-  yourExpressAppVar.listen(PORT, () => {
-    console.log(`SERVER IS LISTENING ON PORT ${PORT}!`);
-  });
-};
+app.use(express.urlencoded({ extended: false }));
 
-init();
+app.use(express.json());
 
-db.authenticate().then(() => {
-  console.log("connected to database");
+// db.authenticate().then(() => {
+//   console.log("connected to database wikistack");
+// });
+
+app.use("/wiki", wikiRouter);
+
+app.get("/", (req, res) => {
+  const content = "";
+  res.send(layout(content));
 });
 
-app.get("/", function (req, res) {
-  res.send("hello world");
-});
+const PORT = process.env.PORT || 5000;
 
-app.get("/", (req, res, next) => {
-  res.redirect("/wiki");
-});
-
-app.listen(3000);
+app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
